@@ -94,10 +94,13 @@ func (c *ClusterUsageCollector) metricsList() []prometheus.Metric {
 
 type cephClusterStats struct {
 	Stats struct {
-		TotalBytes      json.Number `json:"total_space"`
-		TotalUsedBytes  json.Number `json:"total_used"`
-		TotalAvailBytes json.Number `json:"total_avail"`
-		TotalObjects    json.Number `json:"total_objects"`
+		TotalBytes          json.Number `json:"total_bytes"`
+		TotalUsedBytes      json.Number `json:"total_used_bytes"`
+		TotalAvailBytes     json.Number `json:"total_avail_bytes"`
+		TotalObjects        json.Number `json:"total_objects"`
+		LegacyTotalSpaceKiB json.Number `json:"total_space"`
+		LegacyTotalUsedKiB  json.Number `json:"total_used"`
+		LegacyTotalAvailKiB json.Number `json:"total_avail"`
 	} `json:"stats"`
 }
 
@@ -133,6 +136,29 @@ func (c *ClusterUsageCollector) collect() error {
 	totObjects, err = stats.Stats.TotalObjects.Float64()
 	if err != nil {
 		log.Println("[ERROR] cannot extract total objects:", err)
+	}
+
+	if totBytes == 0.0 && usedBytes == 0.0 && availBytes == 0.0 {
+		log.Println("[WARNING] total, used, and available bytes are all zero; falling back to legacy space reporting", err)
+
+		totKiB, err := stats.Stats.LegacyTotalSpaceKiB.Float64()
+		if err != nil {
+			log.Println("[ERROR] cannot extract legacy total kibibytes:", err)
+		}
+
+		usedKiB, err := stats.Stats.LegacyTotalUsedKiB.Float64()
+		if err != nil {
+			log.Println("[ERROR] cannot extract legacy used kibibytes:", err)
+		}
+
+		availKiB, err := stats.Stats.LegacyTotalAvailKiB.Float64()
+		if err != nil {
+			log.Println("[ERROR] cannot extract legacy available kibibytes:", err)
+		}
+
+		totBytes = totKiB * 1024
+		usedBytes = usedKiB * 1024
+		availBytes = availKiB * 1024
 	}
 
 	c.GlobalCapacity.Set(totBytes)
