@@ -94,9 +94,9 @@ func (c *ClusterUsageCollector) metricsList() []prometheus.Metric {
 
 type cephClusterStats struct {
 	Stats struct {
-		TotalBytes      json.Number `json:"total_bytes"`
-		TotalUsedBytes  json.Number `json:"total_used_bytes"`
-		TotalAvailBytes json.Number `json:"total_avail_bytes"`
+		TotalBytes      json.Number `json:"total_space"`
+		TotalUsedBytes  json.Number `json:"total_used"`
+		TotalAvailBytes json.Number `json:"total_avail"`
 		TotalObjects    json.Number `json:"total_objects"`
 	} `json:"stats"`
 }
