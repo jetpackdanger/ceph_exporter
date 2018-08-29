@@ -139,7 +139,7 @@ func (c *ClusterUsageCollector) collect() error {
 	}
 
 	if totBytes == 0.0 && usedBytes == 0.0 && availBytes == 0.0 {
-		log.Println("[WARNING] total, used, and available bytes are all zero; falling back to legacy space reporting", err)
+		log.Println("[WARNING] total, used, and available bytes are all zero; falling back to legacy space reporting")
 
 		totKiB, err := stats.Stats.LegacyTotalSpaceKiB.Float64()
 		if err != nil {
