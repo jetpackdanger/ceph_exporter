@@ -143,17 +143,17 @@ func (c *ClusterUsageCollector) collect() error {
 
 		totKiB, err := stats.Stats.LegacyTotalSpaceKiB.Float64()
 		if err != nil {
-			log.Println("[ERROR] cannot extract legacy total kibibytes:", err)
+			log.Println("[ERROR] cannot extract legacy total KiB:", err)
 		}
 
 		usedKiB, err := stats.Stats.LegacyTotalUsedKiB.Float64()
 		if err != nil {
-			log.Println("[ERROR] cannot extract legacy used kibibytes:", err)
+			log.Println("[ERROR] cannot extract legacy used KiB:", err)
 		}
 
 		availKiB, err := stats.Stats.LegacyTotalAvailKiB.Float64()
 		if err != nil {
-			log.Println("[ERROR] cannot extract legacy available kibibytes:", err)
+			log.Println("[ERROR] cannot extract legacy available KiB:", err)
 		}
 
 		totBytes = totKiB * 1024
